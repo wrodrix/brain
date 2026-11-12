@@ -99,15 +99,6 @@ Novas em `docs/dev/evidencias/`:
 - `m1t-mobile-consumption.png`
 - `m1t-mobile-processes.png`
 
-![Split com arquivo ao lado](evidencias/m1t-desktop-file-panel.png)
-
-![Sidebar recolhida](evidencias/m1t-desktop-sidebar-collapsed.png)
-
-![Consumo do plano](evidencias/m1t-desktop-consumption.png)
-
-![Processos compactos](evidencias/m1t-desktop-processes.png)
-
-![Mobile com plano visível](evidencias/m1t-mobile-chat.png)
 
 ## 5. Arquivos alterados
 

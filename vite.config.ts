@@ -8,11 +8,18 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@shared": path.resolve(__dirname, "./shared"),
     },
   },
   server: {
     host: "127.0.0.1",
     port: 5173,
+    proxy: {
+      "/api": {
+        target: process.env.VITE_API_TARGET ?? "http://127.0.0.1:3000",
+        changeOrigin: false,
+      },
+    },
   },
   preview: {
     host: "127.0.0.1",

@@ -1,0 +1,54 @@
+services:
+  db:
+    image: postgres:17.6-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: brain
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD}
+      POSTGRES_DB: brain
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U brain -d brain"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    # Nunca publicar o PostgreSQL no host/rede externa.
+
+  api:
+    build: .
+    restart: unless-stopped
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 3000
+      DATABASE_URL: postgres://brain:${POSTGRES_PASSWORD}@db:5432/brain
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?defina BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${BRAIN_PUBLIC_ORIGIN:-http://127.0.0.1:3000}
+      BRAIN_PUBLIC_ORIGIN: ${BRAIN_PUBLIC_ORIGIN:-http://127.0.0.1:3000}
+      BRAIN_TRUST_PROXY: ${BRAIN_TRUST_PROXY:-false}
+      BRAIN_TRUSTED_PROXIES: ${BRAIN_TRUSTED_PROXIES:-}
+      BRAIN_SETUP_TOKEN_TTL_HOURS: ${BRAIN_SETUP_TOKEN_TTL_HOURS:-24}
+    ports:
+      - "127.0.0.1:${BRAIN_PORT:-3000}:3000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+volumes:
+  pgdata:

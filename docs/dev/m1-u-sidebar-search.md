@@ -58,13 +58,6 @@ Novas em `docs/dev/evidencias/`:
 - `m1u-desktop-sidebar-collapsed.png`
 - `m1u-mobile-files.png`
 
-![Sidebar com busca e recolher](evidencias/m1u-desktop-chat.png)
-
-![Busca de arquivo na árvore](evidencias/m1u-desktop-file-search.png)
-
-![Sidebar colapsada com expansão após Revisão](evidencias/m1u-desktop-sidebar-collapsed.png)
-
-![Busca de arquivo no mobile](evidencias/m1u-mobile-files.png)
 
 ## 4. Arquivos alterados
 

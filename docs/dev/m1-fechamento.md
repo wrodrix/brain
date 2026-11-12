@@ -138,19 +138,6 @@ Novas capturas em `docs/dev/evidencias/`:
 - `m1z-desktop-markdown-live.png`
 - `m1z-desktop-attachments.png`
 
-![Projetos no desktop](evidencias/m1close-desktop-projects.png)
-
-![Chat no desktop](evidencias/m1close-desktop-chat.png)
-
-![Contexto sem custo confirmado](evidencias/m1close-desktop-context.png)
-
-![Issues em overlay](evidencias/m1close-desktop-issues.png)
-
-![Revisão e gates](evidencias/m1close-desktop-review.png)
-
-![Chat no mobile](evidencias/m1close-mobile-chat.png)
-
-![Issues no mobile](evidencias/m1close-mobile-issues.png)
 
 ## 6. O que continua simulado
 

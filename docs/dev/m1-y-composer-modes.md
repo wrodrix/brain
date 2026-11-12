@@ -142,23 +142,6 @@ Novas em `docs/dev/evidencias/`:
 - `m1z-desktop-markdown-live.png`
 - `m1z-desktop-attachments.png`
 
-![Composer com modo conversacional, microfone e contexto](evidencias/m1aa-desktop-composer-idle.png)
-
-![Transcrição inline com cancelar e finalizar](evidencias/m1aa-desktop-transcription-inline.png)
-
-![Globo do modo conversacional](evidencias/m1ab-desktop-conversation-orb.png)
-
-![Stop no lugar do envio durante execução](evidencias/m1aa-desktop-running-stop.png)
-
-![Enviar aparece quando há texto](evidencias/m1aa-desktop-running-send.png)
-
-![Popover de contexto](evidencias/m1z-desktop-context-popover.png)
-
-![Modelo e effort no rodapé](evidencias/m1z-desktop-model-selector.png)
-
-![Markdown com código e sintaxe](evidencias/m1z-desktop-markdown-live.png)
-
-![Anexos com thumbnail](evidencias/m1z-desktop-attachments.png)
 
 ## 11. Arquivos alterados
 

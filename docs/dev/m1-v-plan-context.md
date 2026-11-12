@@ -77,13 +77,6 @@ Novas em `docs/dev/evidencias/`:
 - `m1v-desktop-usage-providers.png`
 - `m1v-mobile-plan-popover.png`
 
-![Popover com os dois providers](evidencias/m1v-desktop-plan-popover.png)
-
-![Contexto no rodapé do composer](evidencias/m1v-desktop-composer-context.png)
-
-![Abas por provider em /usage](evidencias/m1v-desktop-usage-providers.png)
-
-![Popover do plano no mobile](evidencias/m1v-mobile-plan-popover.png)
 
 ## 5. Arquivos alterados
 

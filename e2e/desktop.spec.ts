@@ -327,7 +327,7 @@ test.describe("jornadas desktop", () => {
     await expect(header.getByRole("link", { name: "Brain — ir para projetos" })).toBeVisible()
     await expect(header.getByRole("button", { name: "Buscar sessões" })).toBeVisible()
     await expect(header.getByRole("button", { name: "Abrir issues" })).toBeVisible()
-    await expect(header.getByRole("button", { name: "Menu da conta de demonstração" })).toBeVisible()
+    await expect(header.getByRole("button", { name: /Menu da conta de/ })).toBeVisible()
 
     const rail = page.getByRole("navigation", { name: "Menu do worktree" })
     await expect(rail).toBeVisible()
@@ -604,16 +604,15 @@ test.describe("jornadas desktop", () => {
     await expectClean(monitor, testInfo)
   })
 
-  test("configurações são ilustrativas e não aceitam credenciais", async ({ page }, testInfo) => {
+  test("configurações distinguem autenticação real de projeto fictício", async ({ page }, testInfo) => {
     const monitor = await monitorDemo(page)
     await page.goto("/settings")
-    await expect(page.getByLabel("Email (auth futura)")).toBeDisabled()
-    await expect(page.getByLabel("Senha (auth futura)")).toBeDisabled()
-    await expect(page.getByText("Nenhuma chave, senha ou token é solicitado")).toBeVisible()
+    await expect(page.getByText("Conta e acesso")).toBeVisible()
+    await expect(page.getByRole("link", { name: "Abrir sessões e dispositivos" })).toBeVisible()
     await page.getByRole("tab", { name: "Acesso" }).click()
-    await expect(page.getByText("não confiável").first()).toBeVisible()
-    await expect(page.getByText("expirado").first()).toBeVisible()
-    await expect(page.getByRole("button", { name: "Revogar sessão" }).first()).toBeDisabled()
+    await expect(page.getByRole("heading", { name: /Este navegador/ })).toBeVisible()
+    await expect(page.getByText("Trocar senha")).toBeVisible()
+    await expect(page.getByText("auth real · projeto fictício")).toBeVisible()
     await expectClean(monitor, testInfo)
   })
 })

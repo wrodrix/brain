@@ -143,24 +143,10 @@ arquivo grande; busca e inclusão explícita no prompt; detalhe de subagente sem
 gates/merge/remoção; painéis operacionais; credenciais desativadas; cenários de falha e rede
 instável; reset; roteiro guiado; navegação móvel, overlay móvel, diff unificado e busca móvel.
 
-As capturas abaixo são da implementação local, não imagens geradas. As evidências finais estão em
+As capturas da implementação local, não imagens geradas, ficam em `docs/dev/evidencias/` e **não
+são versionadas**; um clone do repositório não as contém. As evidências finais estão descritas em
 [`m1-fechamento.md`](m1-fechamento.md) com o prefixo `m1close-`.
 
-![Projetos no desktop](evidencias/desktop-projetos.jpg)
-
-![Chat e composer no desktop](evidencias/desktop-chat.jpg)
-
-![Issues em overlay](evidencias/desktop-issue-overlay.jpg)
-
-![Revisão e gates](evidencias/desktop-review.png)
-
-![Configurações ilustrativas](evidencias/desktop-configuracoes.png)
-
-![Projetos no mobile](evidencias/mobile-projetos.png)
-
-![Chat no mobile](evidencias/mobile-chat.png)
-
-![Arquivos no mobile](evidencias/mobile-arquivos.png)
 
 ## 4. O que continua simulado
 

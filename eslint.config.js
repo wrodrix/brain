@@ -37,7 +37,11 @@ export default tseslint.config(
     },
   },
   {
-    files: ["src/components/ui/**/*.tsx", "src/demo/DemoProvider.tsx"],
+    files: [
+      "src/components/ui/**/*.tsx",
+      "src/demo/DemoProvider.tsx",
+      "src/features/auth/AuthProvider.tsx",
+    ],
     rules: {
       "react-refresh/only-export-components": "off",
     },

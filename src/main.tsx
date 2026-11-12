@@ -6,17 +6,20 @@ import { Toaster } from "sonner"
 import { App } from "./App"
 import { TooltipProvider } from "./components/ui/tooltip"
 import { DemoProvider } from "./demo/DemoProvider"
+import { AuthProvider } from "./features/auth/AuthProvider"
 import "./index.css"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
-      <DemoProvider>
-        <TooltipProvider>
-          <App />
-          <Toaster position="bottom-right" richColors closeButton />
-        </TooltipProvider>
-      </DemoProvider>
+      <AuthProvider>
+        <DemoProvider>
+          <TooltipProvider>
+            <App />
+            <Toaster position="bottom-right" richColors closeButton />
+          </TooltipProvider>
+        </DemoProvider>
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,
 )

@@ -109,17 +109,6 @@ Novas, sem sobrescrever as anteriores:
 - `m1s-mobile-jobs-drawer.png`
 - `m1s-mobile-terminal-drawer.png`
 
-![Chat com sidebar enxuta](evidencias/m1s-desktop-chat.png)
-
-![Arquivo aberto ao lado do chat](evidencias/m1s-desktop-file-panel.png)
-
-![Drawer de jobs](evidencias/m1s-desktop-jobs-drawer.png)
-
-![Drawer de terminal](evidencias/m1s-desktop-terminal-drawer.png)
-
-![Chat mobile](evidencias/m1s-mobile-chat.png)
-
-![Arquivos mobile](evidencias/m1s-mobile-files.png)
 
 ## 5. Arquivos alterados
 

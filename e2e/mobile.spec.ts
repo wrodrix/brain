@@ -106,4 +106,27 @@ test.describe("jornadas mobile", () => {
     await expectNoHorizontalOverflow(page)
     await expectClean(monitor, testInfo)
   })
+
+  test("login e sessões funcionam em viewport estreita", async ({ page, browser }) => {
+    await page.goto("/settings?tab=access")
+    await expect(page.getByRole("heading", { name: /Este navegador/ })).toBeVisible()
+    await expectNoHorizontalOverflow(page)
+    await page.screenshot({ path: "docs/dev/evidencias/m2a-mobile-access.png", fullPage: true })
+
+    const context = await browser.newContext({
+      viewport: { width: 360, height: 800 },
+      isMobile: true,
+      hasTouch: true,
+      storageState: { cookies: [], origins: [] },
+    })
+    const login = await context.newPage()
+    await login.goto("http://127.0.0.1:5174/login")
+    await expect(login.getByRole("heading", { name: "Entrar" })).toBeVisible()
+    const overflow = await login.evaluate(
+      () => document.documentElement.scrollWidth - window.innerWidth,
+    )
+    expect(overflow).toBeLessThanOrEqual(1)
+    await login.screenshot({ path: "docs/dev/evidencias/m2a-mobile-login.png", fullPage: true })
+    await context.close()
+  })
 })

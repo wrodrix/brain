@@ -2,15 +2,10 @@ import * as React from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import {
   ArrowLeft,
-  Check,
   KeyRound,
-  Lock,
-  MonitorSmartphone,
   RefreshCw,
   ShieldCheck,
   SlidersHorizontal,
-  TriangleAlert,
-  X,
 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -21,7 +16,7 @@ import { Alert, Card, CardContent, CardHeader, CardTitle } from "@/components/ui
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useDemo } from "@/demo/DemoProvider"
 import { getProject } from "@/demo/selectors"
-import { formatDateTime } from "@/lib/utils"
+import { AccessPanel } from "./AccessPanel"
 
 function DisabledField({ label, value }: { label: string; value: string }) {
   return (
@@ -36,7 +31,6 @@ export function SettingsPage() {
   const { state, reset } = useDemo()
   const [searchParams, setSearchParams] = useSearchParams()
   const project = getProject(state, searchParams.get("project")) ?? state.projects[0]
-  const session = state.settings.access.sessions
 
   React.useEffect(() => {
     if (!searchParams.get("project")) {
@@ -60,21 +54,31 @@ export function SettingsPage() {
             <SlidersHorizontal className="size-5 text-primary" /> Configurações
           </h1>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-            Representação visual dos estados aprovados. Cadastro, login, CRUD de modos e MCP reais
-            pertencem aos marcos seguintes.
+            Login, sessão e dispositivos são reais. Projetos, modos, MCP, chat e execução continuam
+            demonstrativos.
           </p>
         </div>
-        <Badge variant="warning" className="ml-auto">
-          leitura · dados fictícios
+        <Badge variant="success" className="ml-auto">
+          auth real · projeto fictício
         </Badge>
       </div>
 
       <Alert variant="warning" className="mt-3">
-        Nada nesta página altera um backend, credencial ou dispositivo real. O estado vive em
-        memória e recarregar restaura o cenário inicial.
+        <span>
+          A aba <strong>Acesso</strong> lê e altera sessões reais no PostgreSQL. As demais abas usam
+          fixtures em memória; recarregar restaura apenas o cenário demonstrativo.
+        </span>
       </Alert>
 
-      <Tabs defaultValue="project" className="mt-4">
+      <Tabs
+        value={searchParams.get("tab") ?? "project"}
+        onValueChange={(value) => {
+          const params = new URLSearchParams(searchParams)
+          params.set("tab", value)
+          setSearchParams(params, { replace: true })
+        }}
+        className="mt-4"
+      >
         <TabsList className="w-full justify-start overflow-x-auto sm:w-auto">
           <TabsTrigger value="project">Projeto</TabsTrigger>
           <TabsTrigger value="modes">Modos e MCP</TabsTrigger>
@@ -125,7 +129,7 @@ export function SettingsPage() {
                 <Button size="sm" disabled title="Salvar projeto real pertence ao M2/M3">
                   Salvar alterações
                 </Button>
-                <Button size="sm" variant="outline" disabled title="Bootstrap e autenticação reais pertencem ao M2">
+                <Button size="sm" variant="outline" disabled title="Acesso ao ambiente de execução pertence ao M3">
                   <ShieldCheck /> Testar acesso ao ambiente
                 </Button>
               </div>
@@ -138,39 +142,21 @@ export function SettingsPage() {
           <Card>
             <CardHeader className="pb-1">
               <CardTitle className="flex items-center gap-2">
-                <KeyRound className="size-4" /> Credenciais reais
+                <KeyRound className="size-4" /> Conta e acesso
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 p-3 pt-1">
-              <Alert variant="danger">
-                Formulários de credenciais reais ficam desativados neste demo. Nenhuma chave, senha
-                ou token é solicitado, aceito ou armazenado.
+              <Alert variant="success">
+                Login, senha, sessão e confiança de dispositivo são reais neste lote. O email ainda
+                não é verificado por SMTP.
               </Alert>
-              <div className="grid gap-2 sm:grid-cols-2">
-                <div>
-                  <Label htmlFor="disabled-email" className="text-[11px]">
-                    Email (auth futura)
-                  </Label>
-                  <Input id="disabled-email" disabled placeholder="desativado no M1" className="mt-1" />
-                </div>
-                <div>
-                  <Label htmlFor="disabled-password" className="text-[11px]">
-                    Senha (auth futura)
-                  </Label>
-                  <Input
-                    id="disabled-password"
-                    type="password"
-                    disabled
-                    placeholder="desativado no M1"
-                    className="mt-1"
-                  />
-                </div>
-              </div>
-              <Button size="sm" disabled title="Better Auth e cadastro pertencem ao M2">
-                <Lock /> Entrar / criar conta
+              <Button asChild size="sm" variant="outline">
+                <Link to="/settings?tab=access">
+                  <ShieldCheck /> Abrir sessões e dispositivos
+                </Link>
               </Button>
               <p className="text-[10px] text-muted-foreground">
-                Não há autenticação fictícia apresentada como proteção de dados reais.
+                Credenciais de providers, chaves e conexões externas continuam fora do escopo.
               </p>
             </CardContent>
           </Card>
@@ -300,104 +286,16 @@ export function SettingsPage() {
         </TabsContent>
 
         <TabsContent value="access" className="space-y-3">
-          <Card>
-            <CardHeader className="pb-1">
-              <CardTitle className="flex items-center gap-2">
-                <MonitorSmartphone className="size-4" /> Sessões e dispositivos
-                <Badge variant="outline">ilustrativo</Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 p-3 pt-1">
-              <Alert variant="warning">
-                Better Auth, senha/passkey, OAuth e revogação real pertencem ao M2. Esta lista não
-                representa sessões autenticadas de verdade.
-              </Alert>
-              {session.map((device) => (
-                <div key={device.id} className="rounded-lg border p-2.5 text-xs">
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="font-medium">{device.device}</span>
-                    <Badge
-                      variant={
-                        device.trust === "trusted"
-                          ? "success"
-                          : device.trust === "untrusted"
-                            ? "warning"
-                            : "danger"
-                      }
-                    >
-                      {device.trust === "trusted"
-                        ? "confiável"
-                        : device.trust === "untrusted"
-                          ? "não confiável"
-                          : "expirado"}
-                    </Badge>
-                    <span className="ml-auto text-[10px] text-muted-foreground">
-                      visto {formatDateTime(device.lastSeen)}
-                    </span>
-                  </div>
-                  <p className="mt-1 text-[10px] text-muted-foreground">validade: {device.expires}</p>
-                  <div className="mt-1.5 flex gap-1">
-                    <Button size="xs" variant="outline" disabled title="Revogação real pertence ao M2">
-                      Revogar sessão
-                    </Button>
-                    <Button size="xs" variant="ghost" disabled title="Revogação real pertence ao M2">
-                      Revogar confiança
-                    </Button>
-                  </div>
-                </div>
-              ))}
-              <label className="flex items-start gap-2 rounded-lg border border-dashed p-2.5 text-[11px]">
-                <input type="checkbox" disabled className="mt-0.5" />
-                <span>
-                  <span className="font-medium">Confiar neste dispositivo</span>
-                  <span className="block text-muted-foreground">
-                    Desativado no demo. Prazos: 30 dias de inatividade/90 dias absolutos para
-                    confiável; 15 min/1 h para os demais. A confiança exige autenticação recente e é
-                    revogável.
-                  </span>
-                </span>
-              </label>
-              <p className="text-[10px] text-muted-foreground">
-                Expirar acesso encerraria canais autenticados, inclusive terminal, sem interromper
-                trabalho já admitido. Comportamento a provar no M2.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-1">
-              <CardTitle className="flex items-center gap-2">
-                <ShieldCheck className="size-4" /> Limites desta representação
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-1.5 p-3 pt-1 text-[11px] text-muted-foreground sm:grid-cols-2">
-              <p className="flex items-start gap-1">
-                <Check className="mt-0.5 size-3 shrink-0 text-green-700" /> Estados de confiança e
-                expiração visíveis.
-              </p>
-              <p className="flex items-start gap-1">
-                <Check className="mt-0.5 size-3 shrink-0 text-green-700" /> Dispositivo não confiável
-                começa como padrão.
-              </p>
-              <p className="flex items-start gap-1">
-                <X className="mt-0.5 size-3 shrink-0 text-red-700" /> Sem cookies, hash de senha ou
-                revogação reais.
-              </p>
-              <p className="flex items-start gap-1">
-                <TriangleAlert className="mt-0.5 size-3 shrink-0 text-amber-700" /> Não trate esta
-                tela como proteção de dados.
-              </p>
-            </CardContent>
-          </Card>
+          <AccessPanel />
         </TabsContent>
       </Tabs>
 
       <div className="mt-4 flex flex-wrap items-center gap-2 rounded-lg border bg-card p-3">
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-medium">Estado em memória</p>
+          <p className="text-xs font-medium">Cenário demonstrativo</p>
           <p className="text-[10px] text-muted-foreground">
-            Recarregar/fechar a aba reinicia tudo. O reset abaixo restaura o cenário atual sem tocar
-            em nada externo.
+            Recarregar restaura as fixtures de projeto. Usuário, sessão e dispositivos continuam
+            reais no banco; o reset abaixo não os apaga.
           </p>
         </div>
         <Link to="/usage" className="text-xs font-medium text-primary underline-offset-2 hover:underline">

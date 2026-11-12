@@ -123,17 +123,6 @@ Arquivos novos em `docs/dev/evidencias/` (as capturas anteriores foram preservad
 - `m1r-mobile-during-run.png`
 - `m1r-mobile-approval.png`
 
-![Chat desktop](evidencias/m1r-desktop-chat.png)
-
-![Durante execução no desktop](evidencias/m1r-desktop-during-run.png)
-
-![Aprovação pendente no desktop](evidencias/m1r-desktop-approval.png)
-
-![Chat mobile](evidencias/m1r-mobile-chat.png)
-
-![Durante execução no mobile](evidencias/m1r-mobile-during-run.png)
-
-![Aprovação no mobile](evidencias/m1r-mobile-approval.png)
 
 ## 5. Arquivos alterados
 

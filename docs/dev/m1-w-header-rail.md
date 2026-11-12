@@ -83,13 +83,6 @@ Novas em `docs/dev/evidencias/`:
 - `m1w-desktop-search.png`
 - `m1w-mobile-header.png`
 
-![Cabeçalho unificado e barra de ícones](evidencias/m1w-desktop-header-rail.png)
-
-![Barra de ícones permanece com a sidebar recolhida](evidencias/m1w-desktop-rail-collapsed.png)
-
-![Busca aberta pela barra lateral](evidencias/m1w-desktop-search.png)
-
-![Cabeçalho compacto no mobile](evidencias/m1w-mobile-header.png)
 
 ## 4. Arquivos alterados
 

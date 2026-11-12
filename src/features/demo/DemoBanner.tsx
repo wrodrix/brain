@@ -42,7 +42,7 @@ export function DemoBanner({
           Demonstração — dados fictícios, sem execução real
         </span>
         <span className="hidden text-[10px] text-amber-800 xl:inline">
-          Estado em memória: recarregar reinicia o cenário.
+          Projetos em memória; login e sessões persistem.
         </span>
 
         <div className="ml-auto flex min-w-0 items-center gap-1">
@@ -153,7 +153,8 @@ export function DemoBanner({
             <DialogTitle>Reiniciar a demonstração?</DialogTitle>
             <DialogDescription>
               O cenário volta ao estado inicial determinístico. Rascunhos, fila, edições de arquivo,
-              comentários e merges simulados serão descartados.
+              comentários e merges simulados serão descartados. Usuário, sessão e confiança de
+              dispositivo não são afetados.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

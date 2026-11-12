@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from "react-router-dom"
+import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom"
 import { Compass } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -8,6 +8,9 @@ import { ProjectsPage } from "@/features/projects/ProjectsPage"
 import { SettingsPage } from "@/features/settings/SettingsPage"
 import { UsagePage } from "@/features/usage/UsagePage"
 import { WorkbenchPage } from "@/features/workbench/WorkbenchPage"
+import { LoginPage, SetupPage } from "@/features/auth/AuthPages"
+import { SessionExpiredDialog } from "@/features/auth/SessionDialogs"
+import { useActivitySignal, useAuth } from "@/features/auth/AuthProvider"
 
 function NotFound() {
   return (
@@ -24,10 +27,54 @@ function NotFound() {
   )
 }
 
+function ProtectedShell() {
+  const { status, error, refresh } = useAuth()
+  const location = useLocation()
+  useActivitySignal()
+
+  if (status === "loading") {
+    return (
+      <div className="flex min-h-dvh items-center justify-center text-sm text-muted-foreground">
+        Carregando sessão…
+      </div>
+    )
+  }
+  if (status === "setup") return <Navigate to="/setup" replace />
+  if (status === "anonymous") {
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{ from: `${location.pathname}${location.search}` }}
+      />
+    )
+  }
+  if (status === "error") {
+    return (
+      <div className="mx-auto flex max-w-md flex-col items-center justify-center py-20 text-center">
+        <h1 className="text-lg font-semibold">Não foi possível validar a sessão</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{error}</p>
+        <Button className="mt-4" onClick={() => void refresh()}>
+          Tentar novamente
+        </Button>
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <AppShell />
+      <SessionExpiredDialog />
+    </>
+  )
+}
+
 export function App() {
   return (
     <Routes>
-      <Route element={<AppShell />}>
+      <Route path="login" element={<LoginPage />} />
+      <Route path="setup" element={<SetupPage />} />
+      <Route element={<ProtectedShell />}>
         <Route index element={<ProjectsPage />} />
         <Route path="projects/:projectId" element={<ProjectPage />} />
         <Route

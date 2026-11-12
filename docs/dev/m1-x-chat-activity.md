@@ -82,15 +82,6 @@ Novas em `docs/dev/evidencias/`:
 - `m1y-mobile-idle.png`
 - `m1y-mobile-running-end.png`
 
-![Chat ocioso sem card de título](evidencias/m1y-desktop-idle.png)
-
-![Status no fim da resposta](evidencias/m1y-desktop-running-end.png)
-
-![Hover troca o status por Interromper](evidencias/m1y-desktop-running-hover.png)
-
-![Esc abre a confirmação](evidencias/m1y-desktop-stop-esc.png)
-
-![Status visível no mobile](evidencias/m1y-mobile-running-end.png)
 
 ## 4. Arquivos alterados
 
