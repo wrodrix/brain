@@ -71,10 +71,13 @@ npm run test:e2e         # 37 testes Playwright; usa API 3100 + Vite 5174 + brai
 ### 1.4 Compose
 
 `compose.yaml` e `Dockerfile` foram criados, com PostgreSQL sem porta publicada, API com migração
-no entrypoint, healthcheck e `restart: unless-stopped`. **Não foram executados neste ambiente**:
-o CLI Docker 29.3.0 está instalado, mas o plugin `docker compose`/`docker-compose` não existe e o
-daemon configurado aponta para um host remoto indisponível. Isso é uma pendência de validação, não
-uma alegação de funcionamento.
+no entrypoint, healthcheck e `restart: unless-stopped`. **O caminho Compose não foi executado no
+Mac**: o plugin `docker compose` não está instalado e o daemon configurado aponta para um host
+remoto indisponível.
+
+O caminho **Linux nativo** foi validado no servidor `jarvis`: Node 24.21, PostgreSQL 17.11,
+systemd user service, build, testes web/servidor e Playwright. O `jarvis` não tem Docker; a operação
+dele está em [`jarvis-operacao.md`](jarvis-operacao.md).
 
 ## 2. Arquitetura entregue
 
@@ -194,6 +197,7 @@ Nenhum workspace ou pacote vazio foi criado. `shared/` tem apenas contratos/cons
 | `npm run build` | passou; permanece o aviso de chunk >500 kB (>2,2 MB) |
 | `npm run test:e2e` | **37 testes**: 1 setup + 30 desktop + 6 mobile |
 | `npm start` (build compilado) | `/`, fallback SPA e `/api/health` responderam 200 |
+| Jarvis / Linux nativo | Node 24.21, build, 40 web, 16 server e 37 E2E (`--workers=2`) passaram |
 | Lighthouse `/login` | acessibilidade 100, boas práticas 100, SEO 100 |
 | Lighthouse chat autenticado | acessibilidade 100, boas práticas 100, SEO 100 |
 | Layout | 360/390/768/1024/1280/1440 em login, projetos, chat e Acesso; sem overflow |
@@ -270,10 +274,12 @@ O login é real; os dados de projeto não são. A UI separa os dois conceitos.
 
 **Não bloqueantes:**
 
-- Compose/Docker e Linux não validados neste host; `docker compose` indisponível e daemon remoto
-  fora do ar.
+- Compose/Docker não validados; o `jarvis` usa caminho Linux nativo. `docker compose` não está
+  instalado no Mac e não existe no jarvis.
+- HTTPS/Tailscale Serve ainda não habilitado no jarvis; o acesso atual é HTTP privado na tailnet.
+  Não usar como implantação pública.
 - Reinício do PostgreSQL compartilhado não foi executado para não interromper outros bancos; a
-  persistência foi provada com restart da API e com a sessão no banco.
+  persistência foi provada com restart da API, com a sessão no banco e no serviço systemd do jarvis.
 - Sem validação em telefone físico, teclado iOS/Android, leitor de tela manual, Firefox/WebKit ou
   zoom 200%/400%.
 - HTTPS real, proxy do operador, Caddy e Tailscale não foram configurados/testados.
@@ -302,5 +308,7 @@ rascunhos na expiração e o restart da API mantém a sessão. As ressalvas são
 (Compose/Linux/Postgres restart não executados), de validação física/cross-browser e de escopo
 (sem backup, convite, OAuth/passkeys).
 
-O usuário registrou **aceite do M2-A em 11/11/2026**. O aceite não autoriza M2-B/C, M3, deploy,
-push ou publicação; ressalvas ambientais e de validação física continuam válidas.
+O usuário registrou **aceite do M2-A em 11/11/2026**. O lote foi migrado para o servidor Linux
+`jarvis` em modo nativo e está operacional na tailnet; HTTPS via Serve e Compose continuam
+pendentes. O aceite não autoriza M2-B/C, M3, deploy público, push ou publicação; ressalvas de
+validação física continuam válidas.
