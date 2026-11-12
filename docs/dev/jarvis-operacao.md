@@ -3,9 +3,10 @@
 Registro de 11/11/2026. Migração do ambiente de desenvolvimento do Mac para o servidor Linux
 `jarvis`. O `movs-v2` não foi alterado; o Brain usa banco e serviço próprios.
 
-> **Estado:** app real rodando em `http://jarvis.tail753f8d.ts.net:3000`, acessível pela tailnet.
-> HTTPS via Tailscale Serve ainda não está habilitado (a tailnet exige habilitar Serve no painel).
-> O serviço é nativo (Node + PostgreSQL); Docker/Compose não existe neste host.
+> **Estado:** app real rodando em `http://jarvis.tail753f8d.ts.net:3000` e também em
+> `http://100.111.66.95:3000`, acessível pela tailnet. HTTPS via Tailscale Serve ainda **não** está
+> habilitado: a tailnet exige habilitar Serve pelo painel/login do proprietário. O serviço é nativo
+> (Node + PostgreSQL); Docker/Compose não existe neste host.
 
 ## 1. Acesso
 
@@ -50,8 +51,11 @@ pg_dump -Fc "$DATABASE_URL" > /home/jarvis/brain-$(date +%F).dump
 ## 4. Código e documentação privada
 
 - Repositório: `/home/jarvis/Workspace/brain`.
-- Commits locais: `9359bdd` (M2-A), `afbbce2`, `ca715d6` (teste multiplataforma), além do baseline e
-  da remoção das evidências. **Não houve push**; `origin/main` continua no baseline.
+- Commits atuais: `bd5604b` (M2-A), `725e7a2`, `e1535c4` (teste multiplataforma), `9fd5e21`,
+  `af54e05`. O histórico foi reescrito para remover `docs/dev/evidencias` de todos os commits e
+  enviado com `force-with-lease`; `origin/main` agora aponta para `af54e05`.
+- O GitHub pode manter blobs inalcançáveis em cache até a coleta interna; eles não estão em nenhum
+  ref/branch do repositório.
 - `docs/plano/`, `README.md`, `.research/` e `docs/dev/evidencias/` foram copiados à parte porque
   são ignorados de propósito. O `.git/info/exclude` local foi preservado.
 - `.git.initial-backup` do repositório vazio original foi movido para
@@ -61,14 +65,17 @@ pg_dump -Fc "$DATABASE_URL" > /home/jarvis/brain-$(date +%F).dump
 
 ## 5. Tailscale e HTTPS
 
-O estado atual usa `HOST=100.111.66.95` e origem
-`http://jarvis.tail753f8d.ts.net:3000`, com cookies sem `Secure`. É uma medida temporária de
-desenvolvimento privado.
+O estado atual usa `HOST=100.111.66.95`, `BETTER_AUTH_URL` no DNS e
+`BRAIN_PUBLIC_ORIGIN` no IP; as duas origens são aceitas. Como o acesso é HTTP, os cookies estão
+sem `Secure`. É uma medida temporária de desenvolvimento privado; habilitar HTTPS exige decidir se
+o IP continuará aceito (cookies `Secure` não são enviados em HTTP).
 
 Para habilitar HTTPS privado via Serve (sem Funnel):
 
 1. Habilitar Serve na tailnet pelo link exibido por
-   `tailscale serve --bg --https=443 http://100.111.66.95:3000` (ou no painel Tailscale).
+   `tailscale serve --bg --https=443 http://100.111.66.95:3000` (ou no painel Tailscale). O comando
+   atual retorna **“Serve is not enabled on your tailnet”** e exige login do proprietário; não é
+   possível habilitar apenas por SSH/sem essa conta.
 2. Publicar o destino interno:
    ```bash
    tailscale serve --bg --https=443 http://100.111.66.95:3000
@@ -77,10 +84,11 @@ Para habilitar HTTPS privado via Serve (sem Funnel):
 3. Editar `/home/jarvis/Workspace/brain/.env`:
    ```text
    BETTER_AUTH_URL=https://jarvis.tail753f8d.ts.net
-   BRAIN_PUBLIC_ORIGIN=https://jarvis.tail753f8d.ts.net
-   BRAIN_SECURE_COOKIES=true
+   BRAIN_PUBLIC_ORIGIN=http://100.111.66.95:3000
+   BRAIN_SECURE_COOKIES=false   # mantenha false enquanto o IP HTTP for aceito
    ```
-   Manter `HOST=100.111.66.95` e `PORT=3000` (o Serve alcança esse destino).
+   Manter `HOST=100.111.66.95` e `PORT=3000` (o Serve alcança esse destino). Se quiser cookies
+   `Secure`, remova o IP das origens e use somente o DNS HTTPS.
 4. `systemctl --user restart brain.service`.
 5. Entrar novamente em `https://jarvis.tail753f8d.ts.net/` e revalidar o cookie de dispositivo.
 
@@ -98,13 +106,16 @@ Não usar `tailscale funnel`; não expor a porta 3000 na internet.
 | `npm run test:e2e -- --workers=2` | 37 testes passaram |
 | Login/sessão via browser real | passou; sem erros de console |
 | Restart do serviço | passou; health voltou |
+| Login via DNS e via IP | ambos 200; sessões isoladas por host |
 
 Com 4 workers, um teste de composer estourou timeout uma vez por contenção; com 2 workers passou.
 No Mac, a suíte completa passou com 4 workers.
 
 ## 7. Limitações e pendências
 
-- Tailscale Serve/HTTPS ainda não habilitado; acesso atual é HTTP privado na tailnet.
+- Tailscale Serve/HTTPS ainda não habilitado; acesso atual é HTTP privado na tailnet, tanto pelo
+  DNS quanto pelo IP. Cookies não têm `Secure` nesse modo.
+- O IP e o DNS têm cookies/sessões separados (host-only); entrar em um não autentica o outro.
 - Docker/Compose não instalado no jarvis; o caminho validado aqui é Node nativo + PostgreSQL.
   `Dockerfile`/`compose.yaml` continuam sem execução neste host.
 - Reboot completo do host não foi executado; `Linger=yes` e unit `enabled` estão configurados.
