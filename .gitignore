@@ -13,3 +13,5 @@ e2e/.auth/
 
 # Capturas locais de desenvolvimento; não versionar.
 docs/dev/evidencias/
+.admin-password
+.db-password.tmp
