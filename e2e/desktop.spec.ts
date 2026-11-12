@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test"
 
+const MOD = process.platform === "darwin" ? "Meta" : "Control"
+
 import { expectClean, expectNoHorizontalOverflow, monitorDemo, openWorktree } from "./helpers"
 
 test.describe("jornadas desktop", () => {
@@ -57,13 +59,13 @@ test.describe("jornadas desktop", () => {
     await page.keyboard.press("ArrowLeft")
     await page.keyboard.type("X")
     await expect(editor).toContainText("ABXC")
-    await page.keyboard.press("Meta+z")
+    await page.keyboard.press(`${MOD}+z`)
     await expect(editor).toContainText("ABC")
     await expect(editor).not.toContainText("ABXC")
 
     await page.evaluate(async () => navigator.clipboard.writeText("Texto colado E2E"))
     await editor.click()
-    await page.keyboard.press("Meta+V")
+    await page.keyboard.press(`${MOD}+v`)
     await expect(editor).toContainText("Texto colado E2E")
 
     await page.keyboard.type(" Enviar durante execução")
@@ -119,7 +121,7 @@ test.describe("jornadas desktop", () => {
     await expect(editor).toContainText("Ajuste o retorno após o login")
     await expect(send).toBeVisible()
     await editor.click()
-    await page.keyboard.press("Meta+A")
+    await page.keyboard.press(`${MOD}+a`)
     await page.keyboard.press("Backspace")
     await expect(conversation).toBeVisible()
 
@@ -130,7 +132,7 @@ test.describe("jornadas desktop", () => {
     await page.keyboard.type("Mensagem durante execução")
     await expect(send).toBeVisible()
     await expect(stop).toHaveCount(0)
-    await page.keyboard.press("Meta+A")
+    await page.keyboard.press(`${MOD}+a`)
     await page.keyboard.press("Backspace")
     await expect(stop).toBeVisible()
     await stop.click()
@@ -486,12 +488,12 @@ test.describe("jornadas desktop", () => {
 
     await page.keyboard.type("Contato: pessoa@exemplo.com")
     await expect(page.locator(".cm-tooltip-autocomplete")).toHaveCount(0)
-    await page.keyboard.press("Meta+a")
+    await page.keyboard.press(`${MOD}+a`)
     await page.keyboard.press("Backspace")
     await page.keyboard.type("# Plano")
     await expect(page.locator(".cm-tooltip-autocomplete")).toHaveCount(0)
 
-    await page.keyboard.press("Meta+a")
+    await page.keyboard.press(`${MOD}+a`)
     await page.keyboard.press("Backspace")
     await page.keyboard.type("@Log")
     await expect(page.locator(".cm-tooltip-autocomplete")).toBeVisible()
@@ -503,7 +505,7 @@ test.describe("jornadas desktop", () => {
     await page.getByRole("button", { name: "Fechar", exact: true }).last().click()
 
     await editor.click()
-    await page.keyboard.press("Meta+a")
+    await page.keyboard.press(`${MOD}+a`)
     await page.keyboard.press("Backspace")
     await page.keyboard.type("#142")
     await expect(page.locator(".cm-tooltip-autocomplete")).toBeVisible()
