@@ -1,5 +1,6 @@
 node_modules/
 dist/
+dist-server/
 coverage/
 playwright-report/
 test-results/
@@ -8,3 +9,7 @@ test-results/
 .env
 .env.*
 !.env.example
+e2e/.auth/
+
+# Capturas locais de desenvolvimento; não versionar.
+docs/dev/evidencias/
